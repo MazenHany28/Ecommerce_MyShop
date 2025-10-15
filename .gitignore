@@ -1,0 +1,43 @@
+.vs/# Build results
+bin/
+obj/
+out/
+[Aa]pp_Data/
+[Aa]pp_Start/
+
+# User-specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and temp
+*.log
+*.tlog
+*.tmp
+*.temp
+
+# Packages and dependencies
+*.nupkg
+*.snupkg
+packages/
+node_modules/
+bower_components/
+
+# Publish output
+wwwroot/lib/
+publish/
+dist/
+release/
+debug/
+
+# Resharper / Rider / Visual Studio
+_ReSharper*/
+.idea/
+*.DotSettings.user
+
+# Other
+.env
+Thumbs.db
+*.dbmdl
