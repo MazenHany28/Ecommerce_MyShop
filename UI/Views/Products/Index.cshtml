@@ -1,0 +1,151 @@
+﻿@{
+    ViewData["Title"] = "Products";
+}
+
+    <!-- Products Section -->
+    <section class="products-section py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Filters Sidebar -->
+                <div class="col-lg-3 mb-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Filters</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Quick Filters -->
+                            <div class="filter-chips mb-4">
+                                <div class="filter-chip @(string.IsNullOrEmpty(Model.Category) || Model.Category == "all" ? "active" : "")" data-category="all">All Products</div>
+                                <div class="filter-chip @(Model.Category == "electronics" ? "active" : "")" data-category="electronics">Electronics</div>
+                                <div class="filter-chip @(Model.Category == "clothing" ? "active" : "")" data-category="clothing">Clothing</div>
+                                <div class="filter-chip @(Model.Category == "home" ? "active" : "")" data-category="home">Home & Kitchen</div>
+                                <div class="filter-chip @(Model.Category == "books" ? "active" : "")" data-category="books">Books</div>
+                            </div>
+                            
+                            <!-- Category Filter -->
+                            <div class="mb-4">
+                                <h6>Category</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input category-filter" type="radio" name="category" id="all-categories" value="all" @(string.IsNullOrEmpty(Model.Category) || Model.Category == "all" ? "checked" : "")>
+                                    <label class="form-check-label" for="all-categories">All Categories</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input category-filter" type="radio" name="category" id="electronics" value="electronics" @(Model.Category == "electronics" ? "checked" : "")>
+                                    <label class="form-check-label" for="electronics">Electronics</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input category-filter" type="radio" name="category" id="clothing" value="clothing" @(Model.Category == "clothing" ? "checked" : "")>
+                                    <label class="form-check-label" for="clothing">Clothing</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input category-filter" type="radio" name="category" id="home" value="home" @(Model.Category == "home" ? "checked" : "")>
+                                    <label class="form-check-label" for="home">Home & Kitchen</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input category-filter" type="radio" name="category" id="books" value="books" @(Model.Category == "books" ? "checked" : "")>
+                                    <label class="form-check-label" for="books">Books</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Price Filter -->
+                            <div class="mb-4">
+                                <h6>Price Range</h6>
+                                <div class="mb-2">
+                                    <label for="min-price" class="form-label">Min: $<span id="min-price-value">@(Model.MinPrice ?? 0)</span></label>
+                                    <input type="range" class="form-range" id="min-price" min="0" max="1000" value="@(Model.MinPrice ?? 0)">
+                                </div>
+                                <div>
+                                    <label for="max-price" class="form-label">Max: $<span id="max-price-value">@(Model.MaxPrice ?? 1000)</span></label>
+                                    <input type="range" class="form-range" id="max-price" min="0" max="1000" value="@(Model.MaxPrice ?? 1000)">
+                                </div>
+                            </div>
+                            
+                            <!-- Sort Options -->
+                            <div class="mb-3">
+                                <h6>Sort By</h6>
+                                <select class="form-select" id="sort-options">
+                                <option value="name-asc" selected="@(Model.SortBy == "name-asc")">Name (A-Z)</option>
+                                <option value="name-desc" selected="@(Model.SortBy == "name-desc")">Name (Z-A)</option>
+                                <option value="price-asc" selected="@(Model.SortBy == "price-asc")">Price (Low to High)</option>
+                                <option value="price-desc" selected="@(Model.SortBy == "price-desc")">Price (High to Low)</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100" id="apply-filters">Apply Filters</button>
+                            <button class="btn btn-outline-secondary w-100 mt-2" id="reset-filters">Reset Filters</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Products Grid -->
+                <div class="col-lg-9">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>All Products</h2>
+                        <div class="d-flex align-items-center">
+                            <span class="me-2">View:</span>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary active" id="grid-view">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" id="list-view">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Count -->
+                    <div id="results-count" class="text-muted mb-3">
+                        @Model.TotalProducts products found
+                        @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                        {
+                            <text>for "<strong>@Model.SearchTerm</strong>"</text>
+                        }
+                    </div>
+                    
+                    <div class="row" id="products-grid" data-total-count="@Model.TotalProducts">
+                        <!-- Products loaded from server -->
+                        @foreach (var product in Model.Products)
+                        {
+                            <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                                <div class="card product-card h-100">
+                                    <img src="@product.ImageUrl" class="card-img-top product-image" alt="@product.Name">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">@product.Name</h5>
+                                        <p class="card-text flex-grow-1">@product.Description</p>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="product-price">$@product.Price.ToString("F2")</span>
+                                            <span class="badge bg-success stock-badge">In Stock</span>
+                                        </div>
+                                        <button class="btn btn-add-to-cart w-100" onclick="addToCart(@product.Id)">
+                                            <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                                        </button>
+                                        <a href="@Url.Action("Details", "Products", new { id = product.Id })" class="btn btn-outline-primary mt-2">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <nav aria-label="Products pagination" class="mt-5">
+                        <ul class="pagination justify-content-center" id="pagination">
+                            <!-- Pagination will be generated by server -->
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.Page ? "active" : "")">
+                                    <a class="page-link" href="#" onclick="changePage(@i)">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+@section Scripts{
+    <script src="~/js/products.js"></script>
+}
