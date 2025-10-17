@@ -73,7 +73,7 @@
         <h2 class="text-center mb-5">Featured Products</h2>
         <div class="row" id="featured-products">
             <!-- Featured products will be loaded from server -->
-            @if (Model.FeaturedProducts != null)
+ @*            @if (Model.FeaturedProducts != null)
             {
                 foreach (var product in Model.FeaturedProducts)
                 {
@@ -97,7 +97,7 @@
                     </div>
                 }
             }
-        </div>
+        </div> *@
         <div class="text-center mt-4">
             <a href="@Url.Action("Index", "Products")" class="btn btn-primary btn-lg">View All Products</a>
         </div>

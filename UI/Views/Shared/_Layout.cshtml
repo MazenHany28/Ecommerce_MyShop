@@ -6,16 +6,16 @@
     <title>@ViewData["Title"] - MyShop</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/UI.styles.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
     <link rel="stylesheet" href="~/css/responsive.css" asp-append-version="true">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
+
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">
                     <i class="fas fa-shopping-bag me-2"></i>MyShop
                 </a>
@@ -42,7 +42,6 @@
                             </ul>
                         </li>
                     </ul>
-                    <partial name="_LoginPartial" />
                     <div class="d-flex">
                         <form class="d-flex me-2" role="search" action="@Url.Action("Index", "Products")" method="get">
                             <input class="form-control me-2" type="search" name="search" placeholder="Search products..." aria-label="Search">
@@ -53,10 +52,11 @@
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">0</span>
                         </a>
                     </div>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
-    </header>
+
 
 
         <main role="main" class="pb-3">

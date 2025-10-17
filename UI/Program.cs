@@ -18,6 +18,7 @@ namespace UI
             var connectionString = builder.Configuration.GetConnectionString("EcommerceDB") ?? throw new InvalidOperationException("Connection string 'EcommerceDB' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+   
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddIdentity<AppIdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -31,7 +32,11 @@ namespace UI
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+            });
 
             var app = builder.Build();
 
@@ -51,7 +56,7 @@ namespace UI
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseCookiePolicy();
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
