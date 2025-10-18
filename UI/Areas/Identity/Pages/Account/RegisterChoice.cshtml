@@ -1,0 +1,16 @@
+﻿@page
+@model RegisterChoiceModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1 class="text-center mt-5">Choose how you want to register</h1>
+
+<div class="mt-5 text-center">
+    <div class="m-3">
+        <a asp-page="/Account/RegisterCustomer" class="btn btn-lg btn-primary rounded-pill p-4 fs-3">Register as Customer</a>
+    </div>
+    <div class="m-5">
+        <a asp-page="/Account/RegisterBuyer" class="btn btn-lg btn-secondary rounded-pill p-4 fs-3">Register as Buyer</a>
+    </div>
+</div>

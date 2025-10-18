@@ -22,28 +22,23 @@ using System.Threading.Tasks;
 
 namespace UI.Areas.Identity.Pages.Account
 {
-    public class RegisterModel : PageModel
+    public class RegisterBuyerModel : PageModel
     {
         private readonly SignInManager<AppIdentityUser> _signInManager;
         private readonly UserManager<AppIdentityUser> _userManager;
         private readonly IUserStore<AppIdentityUser> _userStore;
         private readonly IUserEmailStore<AppIdentityUser> _emailStore;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
 
-        public RegisterModel(
+
+        public RegisterBuyerModel(
             UserManager<AppIdentityUser> userManager,
             IUserStore<AppIdentityUser> userStore,
-            SignInManager<AppIdentityUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            SignInManager<AppIdentityUser> signInManager)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
-            _logger = logger;
-            _emailSender = emailSender;
         }
 
         /// <summary>
@@ -80,6 +75,36 @@ namespace UI.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Required]
+            [Display(Name = "UserName")]
+            public string UserName {  get; set; }
+
+            [Required]
+            [StringLength(50, MinimumLength = 3)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(50, MinimumLength = 3)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [RegularExpression("^(M|F)$", ErrorMessage = "Gender can only be M or F")]
+            public char Gender { get; set; }
+
+
+
+            [Display(Name = "Phone Number")]
+            [RegularExpression("^(010|012|015)[0-9]{8}$"
+                , ErrorMessage = "Invalid phone number format")]
+            public string PhoneNumber { get; set; } = string.Empty;
+
+
+            
+            [Display(Name = "Organization")]
+            [StringLength(300, MinimumLength = 3)]
+            public string Organization { get; set; }=string.Empty;
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -104,36 +129,43 @@ namespace UI.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+          
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.Gender = Input.Gender;
+                user.PhoneNumber = Input.PhoneNumber;
+                user.Organization = Input.Organization;
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    result = await _userManager.AddToRoleAsync(user,"Buyer");
+                    //Email confirmation disabled
+                    //var userId = await _userManager.GetUserIdAsync(user);
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    //var callbackUrl = Url.Page(
+                    //    "/Account/ConfirmEmail",
+                    //    pageHandler: null,
+                    //    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                    //    protocol: Request.Scheme);
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -155,16 +187,16 @@ namespace UI.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private AppIdentityUser CreateUser()
+        private Buyer CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<AppIdentityUser>();
+                return Activator.CreateInstance<Buyer>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(AppIdentityUser)}'. " +
-                    $"Ensure that '{nameof(AppIdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(Buyer)}'. " +
+                    $"Ensure that '{nameof(Buyer)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }

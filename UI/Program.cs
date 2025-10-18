@@ -1,16 +1,17 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using DAL.Data;
 using DAL.Entities;
 using DAL.Repositories;
 using DAL.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using UI.Helpers;
 
 
 namespace UI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,14 @@ namespace UI
                 .WithStaticAssets();
             app.MapRazorPages()
                .WithStaticAssets();
+
+            // Seed roles and admin
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await RoleSeeder.SeedRolesAndAdminAsync(services);
+            }
+
 
             app.Run();
         }
