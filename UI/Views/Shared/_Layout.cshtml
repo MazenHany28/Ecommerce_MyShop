@@ -44,7 +44,7 @@
                     </ul>
                     <div class="d-flex">
                         <form class="d-flex me-2" role="search" action="@Url.Action("Index", "Products")" method="get">
-                            <input class="form-control me-2" type="search" name="search" placeholder="Search products..." aria-label="Search">
+                        <input id="search-input" class="form-control me-2" type="search" name="SearchTerm" placeholder="Search products..." aria-label="Search">
                             <button class="btn btn-outline-light" type="submit">Search</button>
                         </form>
                         <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-light position-relative">

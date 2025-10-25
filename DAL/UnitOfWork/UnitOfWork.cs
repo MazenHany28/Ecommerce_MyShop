@@ -11,22 +11,24 @@ namespace DAL.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext context;
-        public IproductRepo products;
-        public IOrderRepo orders;
-        public ICategoryRepo categories;
+        public IproductRepo Products { get; }
+        public IOrderRepo Orders { get; }
+        public ICategoryRepo Categories { get; }
 
         public UnitOfWork(ApplicationDbContext _context, IOrderRepo _orders,
                 ICategoryRepo _categories,IproductRepo _products)
         {
             context = _context;
-            orders = _orders;
-            categories = _categories;
-            products = _products;
+            Orders = _orders;
+            Categories = _categories;
+            Products = _products;
         }
+
 
         public async Task SaveChangesAsync()
         {
             await context.SaveChangesAsync();
+            
         }
 
     }

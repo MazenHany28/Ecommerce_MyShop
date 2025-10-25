@@ -12,8 +12,8 @@ namespace DAL.Repositories
 {
     public class GenericRepository<T> : IRepository<T> where T : class, IEntity
     {
-        private readonly ApplicationDbContext context;
-        private readonly DbSet<T> dbSet;
+        protected readonly ApplicationDbContext context;
+        protected readonly DbSet<T> dbSet;
 
         public GenericRepository(ApplicationDbContext _context)
         {
@@ -23,75 +23,42 @@ namespace DAL.Repositories
 
         public async Task AddAsync(T entity)
         {
-            try
-            {
-                await dbSet.AddAsync(entity);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error adding entity to the database.", ex);
-            }
+
+            await dbSet.AddAsync(entity);
+  
         }
 
         public void Delete(T entity)
         {
-            try
-            {
-                dbSet.Remove(entity);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error deleting entity from the database.", ex);
-            }
+            dbSet.Remove(entity);
+
         }
 
-        public async Task<IEnumerable<T>> FilterAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>,IQueryable<T>>? Query = null)
         {
-            try
-            {
-                return await dbSet.Where(predicate).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error filtering entities from the database.", ex);
-            }
-        }
+            IQueryable<T> query = dbSet;
+            if (Query != null)
+                query = Query(query);
+            return await query.ToListAsync();
 
-        public async Task<IEnumerable<T>> GetAllAsync()
-        {
-            try
-            {
-                return await dbSet.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving all entities from the database.", ex);
-            }
         }
 
         public async Task<T?> GetByIdAsync(int Id)
         {
-            try
-            {
-                return await dbSet.FindAsync(Id);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error retrieving entity with ID {Id} from the database.", ex);
-            }
+            return await dbSet.FindAsync(Id);
+          
         }
 
         public void Update(T entity)
         {
-            try
-            {
-                dbSet.Update(entity);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error updating entity in the database.", ex);
-            }
+            dbSet.Update(entity);
+
         }
+
+
+        public IQueryable<T>  Query() {
+            return  dbSet.AsQueryable();
+        } 
     }
 
 }

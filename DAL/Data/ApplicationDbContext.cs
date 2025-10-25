@@ -48,7 +48,7 @@ namespace DAL.Data
                 e.HasMany(p=>p.orders)
                 .WithOne(op=>op.product)
                 .HasForeignKey(op=>op.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
                 e.HasOne(p => p.Category)
                 .WithMany(c => c.products)
@@ -61,6 +61,8 @@ namespace DAL.Data
                     t.HasCheckConstraint("Stock", "[Stock]>=0");
                 });
 
+                e.HasIndex(p=>p.Name).IsUnique();
+
             });
 
             builder.Entity<Order>(e =>
@@ -68,25 +70,26 @@ namespace DAL.Data
                 e.HasOne(o=>o.customer)
                 .WithMany(c=>c.Orders)
                 .HasForeignKey(o=>o.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
                 e.HasMany(o => o.products)
                 .WithOne(op => op.order)
                 .HasForeignKey(op => op.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
-
             });
 
             builder.Entity<OrderProducts>(e =>
             {
-                e.HasKey(op => new { op.OrderId, op.ProductId });
-
                 e.ToTable(t =>
                 {
                     t.HasCheckConstraint("Quantity", "[Quantity]>=0");
-                    
                 });
+            });
 
+
+            builder.Entity<Category>(e =>
+            {
+                e.HasIndex(c =>c.Name).IsUnique();
             });
 
         }

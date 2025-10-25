@@ -18,8 +18,8 @@ namespace DAL.Entities
         [Required]
         public string PaymentTransactionId { get; set; } = string.Empty;
         //fk
-        [Required]
-        public string CustomerId { get; set; }
+        //[Required] allowing null values in case of deletion in the database
+        public string? CustomerId { get; set; }
         //nav prop
         public virtual Customer? customer { get; set; }
         public virtual ICollection<OrderProducts> products { get; set; } = new HashSet<OrderProducts>();

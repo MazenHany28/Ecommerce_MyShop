@@ -9,12 +9,14 @@ namespace DAL.Entities
 {
     public class OrderProducts:IEntity
     {
+        [Key]
+        public int Id { get; set; }
         //fk
         [Required]
         public int OrderId { get; set; }
         //fk
-        [Required]
-        public int ProductId { get; set; }
+  //[Required] allowing null values in case of deletion in the database
+        public int? ProductId { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "Can't be negative")]
         public int Quantity { get; set; }
         //nav prop

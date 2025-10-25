@@ -1,4 +1,4 @@
-// Main JavaScript for ShopEasy E-commerce
+// Main JavaScript for MyShop E-commerce
 
 // Cart Management
 class CartManager {

@@ -102,13 +102,13 @@ async function submitFilterForm() {
     try {
         const formData = getFilterFormData();
         
-        // Get anti-forgery token from Razor
-        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-        if (token) {
-            formData.append('__RequestVerificationToken', token);
-        }
+        //// Get anti-forgery token from Razor
+        //const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+        //if (token) {
+        //    formData.append('__RequestVerificationToken', token);
+        //}
         
-        const response = await fetch(window.location.href, {
+        const response = await fetch('Products/Index', {
             method: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -125,6 +125,9 @@ async function submitFilterForm() {
         }
     } catch (error) {
         console.error('Error filtering products:', error);
+        const text = await response.text();
+        console.error('Server response:', text);
+
         showError('Error loading products. Please try again.');
     } finally {
         isLoading = false;
@@ -140,8 +143,8 @@ function getFilterFormData() {
     const searchTerm = document.getElementById('search-input')?.value.trim() || '';
     const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'all';
     const minPrice = document.getElementById('min-price')?.value || '0';
-    const maxPrice = document.getElementById('max-price')?.value || '1000';
-    const sortOption = document.getElementById('sort-options')?.value || 'name-asc';
+    const maxPrice = document.getElementById('max-price')?.value || '10000000';
+    const sortOption = document.getElementById('sort-options')?.value || '';
     
     // Match these names to your ViewModel properties
     formData.append('SearchTerm', searchTerm);
@@ -150,7 +153,7 @@ function getFilterFormData() {
     formData.append('MaxPrice', maxPrice);
     formData.append('SortBy', sortOption);
     formData.append('Page', currentPage.toString());
-    formData.append('ViewType', currentView);
+    //formData.append('ViewType', currentView);
     
     return formData;
 }
@@ -179,23 +182,23 @@ function updateProductsPartialView(html) {
     }
     
     // Update browser URL for AJAX navigation
-    updateBrowserURL();
+    //updateBrowserURL();
 }
 
 // Update Browser URL without reload
-function updateBrowserURL() {
-    const params = new URLSearchParams();
-    const formData = getFilterFormData();
+//function updateBrowserURL() {
+//    const params = new URLSearchParams();
+//    const formData = getFilterFormData();
     
-    for (const [key, value] of formData.entries()) {
-        if (value && key !== '__RequestVerificationToken' && key !== 'ViewType') {
-            params.append(key, value);
-        }
-    }
+//    for (const [key, value] of formData.entries()) {
+//        if (value && key !== '__RequestVerificationToken' && key !== 'ViewType') {
+//            params.append(key, value);
+//        }
+//    }
     
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState({}, '', newUrl);
-}
+//    const newUrl = `${window.location.pathname}?${params.toString()}`;
+//    window.history.replaceState({}, '', newUrl);
+//}
 
 // Setup Quick Filters
 function setupQuickFilters() {

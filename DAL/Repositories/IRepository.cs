@@ -10,11 +10,12 @@ namespace DAL.Repositories
 {
     public interface IRepository<T> where T : class, IEntity
     {
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>? Query=null);
         Task<T?> GetByIdAsync(int Id);
-        Task<IEnumerable<T>> FilterAsync(Expression<Func<T, bool>> predicate);
+      
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
+        IQueryable<T> Query();
     }
 }

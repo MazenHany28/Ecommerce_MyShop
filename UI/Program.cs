@@ -1,3 +1,5 @@
+using BLL.Interfaces;
+using BLL.Services;
 using DAL.Data;
 using DAL.Entities;
 using DAL.Repositories;
@@ -33,6 +35,8 @@ namespace UI
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.AddScoped<IProductService, ProductService>();
+
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Identity/Account/Login";
@@ -45,10 +49,11 @@ namespace UI
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
+                //app.UseExceptionHandler("/Home/Error");
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("~Views/Shared/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
