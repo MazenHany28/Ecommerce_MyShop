@@ -29,6 +29,14 @@ namespace UI
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+
             builder.Services.AddScoped<IproductRepo, ProductRepo>();
             builder.Services.AddScoped<IOrderRepo, OrderRepo>();
             builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
@@ -36,6 +44,9 @@ namespace UI
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IImageService, ImageService>();
+            builder.Services.AddScoped<ICartService, CartService>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -60,6 +71,8 @@ namespace UI
 
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthorization();
             app.UseCookiePolicy();

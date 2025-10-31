@@ -1,19 +1,24 @@
 using System.Diagnostics;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UI.Models;
 
 namespace UI.Controllers
 {
     public class HomeController : Controller
     {
-        
-        public HomeController()
+        private readonly IProductService productService;
+        public HomeController(IProductService _productService)
         {
+            productService = _productService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var featuredproductsnum = 8;
+            var featuredproducts = await productService.FilterAsync(p => p.Skip( new Random().Next(p.Count()- featuredproductsnum+1) ).Take(featuredproductsnum));
+            return View(featuredproducts);
         }
 
 

@@ -18,6 +18,7 @@ namespace DAL.Repositories
     {
         public CategoryRepo(ApplicationDbContext _context) : base(_context)
         {
+
         }
 
     }

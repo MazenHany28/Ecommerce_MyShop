@@ -1,4 +1,4 @@
-﻿using BLL.DTOs.Product;
+﻿using BLL.DTOs.Products;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.Entities;

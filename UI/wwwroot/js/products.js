@@ -201,16 +201,16 @@ function updateProductsPartialView(html) {
 //}
 
 // Setup Quick Filters
-function setupQuickFilters() {
-    document.querySelectorAll('.filter-chip').forEach(chip => {
-        chip.addEventListener('click', function() {
-            const category = this.dataset.category;
-            document.querySelector(`input[value="${category}"]`).checked = true;
-            currentPage = 1;
-            submitFilterForm();
-        });
-    });
-}
+//function setupQuickFilters() {
+//    document.querySelectorAll('.filter-chip').forEach(chip => {
+//        chip.addEventListener('click', function() {
+//            const category = this.dataset.category;
+//            document.querySelector(`input[value="${category}"]`).checked = true;
+//            currentPage = 1;
+//            submitFilterForm();
+//        });
+//    });
+//}
 
 // Show/Hide Loading States
 function showLoadingState(show) {
@@ -234,7 +234,8 @@ function showSearchLoading(show) {
     if (show && !loadingIndicator) {
         loadingIndicator = document.createElement('div');
         loadingIndicator.id = 'search-loading';
-        loadingIndicator.className = 'position-absolute end-0 top-50 translate-middle-y me-4';
+        loadingIndicator.className = 'position-absolute top-50 translate-middle-y me-5';
+        loadingIndicator.style.right = '50px';
         loadingIndicator.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"></div>';
         
         const searchContainer = document.getElementById('search-input').parentElement;
@@ -248,13 +249,13 @@ function showSearchLoading(show) {
 // Reset Filters
 function resetFilters() {
     document.querySelector('input[value="all"]').checked = true;
-    document.getElementById('min-price').value = 0;
-    document.getElementById('max-price').value = 1000;
     document.getElementById('search-input').value = '';
-    document.getElementById('sort-options').value = 'name-asc';
+    document.getElementById('sort-options').value = '';
+    document.getElementById('min-price').value = 0;
+    document.getElementById('max-price').value = 1000000000;
     
     updatePriceValues();
-    currentPage = 1;
+    //currentPage = 1;
     submitFilterForm();
     
     showFilterToast('Filters reset successfully');

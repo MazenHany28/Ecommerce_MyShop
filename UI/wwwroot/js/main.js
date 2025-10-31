@@ -13,10 +13,14 @@ class CartManager {
             formData.append('quantity', quantity);
             
             // Get anti-forgery token
-            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-            if (token) {
-                formData.append('__RequestVerificationToken', token);
-            }
+            //const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            //if (token) {
+            //    formData.append('__RequestVerificationToken', token);
+            //}
+
+            const token = document.querySelector('meta[name="x-xsrf-token"]')?.getAttribute('content');
+            if (token) formData.append('__RequestVerificationToken', token);
+
             
             const response = await fetch('/Cart/AddToCart', {
                 method: 'POST',
@@ -25,6 +29,13 @@ class CartManager {
                 },
                 body: formData
             });
+
+
+            if (response.status === 401) {
+
+                window.location.href = '/Identity/Account/Login';
+                return; 
+            }
             
             if (response.ok) {
                 const data = await response.json();
@@ -112,30 +123,35 @@ function addToCart(productId, quantity = 1) {
     cartManager.addToCart(productId, quantity);
 }
 
+
+
+
 // Star Rating Generator
-function generateStarRating(rating) {
-    let stars = '';
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
+//function generateStarRating(rating) {
+//    let stars = '';
+//    const fullStars = Math.floor(rating);
+//    const hasHalfStar = rating % 1 !== 0;
     
-    for (let i = 0; i < fullStars; i++) {
-        stars += '<i class="fas fa-star"></i>';
-    }
+//    for (let i = 0; i < fullStars; i++) {
+//        stars += '<i class="fas fa-star"></i>';
+//    }
     
-    if (hasHalfStar) {
-        stars += '<i class="fas fa-star-half-alt"></i>';
-    }
+//    if (hasHalfStar) {
+//        stars += '<i class="fas fa-star-half-alt"></i>';
+//    }
     
-    const emptyStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < emptyStars; i++) {
-        stars += '<i class="far fa-star"></i>';
-    }
+//    const emptyStars = 5 - Math.ceil(rating);
+//    for (let i = 0; i < emptyStars; i++) {
+//        stars += '<i class="far fa-star"></i>';
+//    }
     
-    return stars;
-}
+//    return stars;
+//}
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+
+
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

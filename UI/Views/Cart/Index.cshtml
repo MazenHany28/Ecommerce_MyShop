@@ -1,4 +1,5 @@
-﻿
+﻿@using UI.ViewModels
+@model CartViewModel
 @{
     ViewData["Title"] = "Shopping Cart";
 }
@@ -51,14 +52,14 @@
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
-                                            <p class="text-muted mb-2 small">@item.Description</p>
+                                            <p class="text-muted mb-2 small">@item.description</p>
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="quantity-controls d-flex align-items-center">
                                                     <span class="me-2 small">Qty:</span>
                                                     <button class="quantity-btn" onclick="updateCartQuantity(@item.ProductId, @(item.Quantity - 1))">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
-                                                    <input type="number" class="quantity-input mx-2" value="@item.Quantity" min="1" max="10"
+                                                    <input type="number" class="quantity-input mx-2" value="@item.Quantity" min="1" max="100"
                                                            onchange="updateCartQuantity(@item.ProductId, parseInt(this.value))">
                                                     <button class="quantity-btn" onclick="updateCartQuantity(@item.ProductId, @(item.Quantity + 1))">
                                                         <i class="fas fa-plus"></i>

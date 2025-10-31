@@ -1,4 +1,4 @@
-﻿using BLL.DTOs.Product;
+﻿using BLL.DTOs.Products;
 
 namespace UI.ViewModels.Products
 {
@@ -24,6 +24,9 @@ namespace UI.ViewModels.Products
         public int TotalPages => (int)Math.Ceiling((decimal)TotalProducts / PageSize);
         public int MaxProduct {  get; set; }
         public int MinProduct { get; set; }
+
+        public IEnumerable<string> CategoryNames { get; set; }= new HashSet<string>();
+
     }
 
 }

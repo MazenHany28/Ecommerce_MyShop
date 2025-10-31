@@ -12,7 +12,6 @@ namespace DAL.Repositories
     {
         Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>>? Query=null);
         Task<T?> GetByIdAsync(int Id);
-      
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);

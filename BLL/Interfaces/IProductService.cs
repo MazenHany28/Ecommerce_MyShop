@@ -1,4 +1,4 @@
-﻿using BLL.DTOs.Product;
+﻿using BLL.DTOs.Products;
 using DAL.Entities;
 using DAL.UnitOfWork;
 using System;

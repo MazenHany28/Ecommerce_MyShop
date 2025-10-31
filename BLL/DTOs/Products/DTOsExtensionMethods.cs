@@ -1,12 +1,11 @@
-﻿using BLL.DTOs.Product;
-using DAL.Entities;
+﻿using DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL
+namespace BLL.DTOs.Products
 {
     public static class DTOsExtensionMethods
     {
@@ -42,7 +41,8 @@ namespace BLL
                 AddedByUserId = product.AddedByUserId,
                 AddedByUser=product.AddedByUser.FirstName+' '+ product.AddedByUser.LastName,
                 Category=product.Category.Name ,
-                 QuantitySold=product.orders.Sum(o => o.Quantity), 
+                CategoryDescription=product.Category.Description,
+                QuantitySold=product.orders.Sum(o => o.Quantity), 
                 };
 
             return dto;

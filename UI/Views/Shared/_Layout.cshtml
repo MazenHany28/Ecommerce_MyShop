@@ -1,8 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@{
+    // Get the name of the current Controller from the route data
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    // Get the name of the current Action from the route data
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-xsrf-token" content="@Xsrf.GetAndStoreTokens(ViewContext.HttpContext).RequestToken" />
     <title>@ViewData["Title"] - MyShop</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -30,7 +41,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Index", "Products")">Products</a>
                         </li>
-                        <li class="nav-item dropdown">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Admin")">Admin Panel</a>
+                        </li>
+
+                    }
+
+                        @* <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                                 Categories
                             </a>
@@ -40,13 +59,17 @@
                                 <li><a class="dropdown-item" href="@Url.Action("Index", "Products", new { category = "home" })">Home & Kitchen</a></li>
                                 <li><a class="dropdown-item" href="@Url.Action("Index", "Products", new { category = "books" })">Books</a></li>
                             </ul>
-                        </li>
+                        </li> *@
                     </ul>
                     <div class="d-flex">
-                        <form class="d-flex me-2" role="search" action="@Url.Action("Index", "Products")" method="get">
-                        <input id="search-input" class="form-control me-2" type="search" name="SearchTerm" placeholder="Search products..." aria-label="Search">
+             
+                   @*      <form class="d-flex me-2" role="search" action="@Url.Action("Index", "Products")" method="post">
+                            <input id="search-input" class="form-control me-4" type="search" name="SearchTerm" placeholder="Search products..." aria-label="Search">
                             <button class="btn btn-outline-light" type="submit">Search</button>
-                        </form>
+                        </form> *@
+                    
+                    
+                    
                         <a href="@Url.Action("Index", "Cart")" class="btn btn-outline-light position-relative">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">0</span>

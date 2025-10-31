@@ -1,173 +1,147 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using BLL.Interfaces;
 using DAL.Data;
 using DAL.Entities;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using UI.Helpers;
+using UI.ViewModels.Products;
 
 namespace UI.Controllers
 {
-    //[Authorize(Roles ="Admin")]
-    //public class AdminController : Controller
-    //{
-    //    private readonly IUnitOfWork UoW;
+    [Authorize(Roles = "Admin")]
+    public class AdminController : Controller
+    {
+        private readonly ICategoryService categoryService;
+        private readonly IProductService productService;
+        private readonly IImageService imageService;
+        //private readonly UserManager<AppIdentityUser> userManager;
 
-    //    public AdminController(IUnitOfWork _UoW)
-    //    {
-    //        UoW = _UoW;
-    //    }
+        public AdminController(IProductService _productservice,
+                                ICategoryService _categoryService,
+                                IImageService _imageservice
+                                //UserManager<AppIdentityUser> _userManager
+                                )
+        {
+           productService = _productservice;
+           categoryService = _categoryService;
+            imageService = _imageservice;
+            //userManager = _userManager;
+        }
 
-    //    // GET: Admin/ProductIndex
-    //    public async Task<IActionResult> ProductIndex()
-    //    {
-    //        var applicationDbContext = _context.Products.Include(p => p.AddedByUser).Include(p => p.Category);
-    //        return View(await applicationDbContext.ToListAsync());
-    //    }
+        public IActionResult Index() { 
+            return View();
+        }
 
-    //    // GET: Admin/ProductDetails/5
-    //    public async Task<IActionResult> ProductDetails(int? id)
-    //    {
-    //        if (id == null)
-    //        {
-    //            return NotFound();
-    //        }
 
-    //        var product = await _context.Products
-    //            .Include(p => p.AddedByUser)
-    //            .Include(p => p.Category)
-    //            .FirstOrDefaultAsync(m => m.Id == id);
-    //        if (product == null)
-    //        {
-    //            return NotFound();
-    //        }
 
-    //        return View(product);
-    //    }
+        // GET: Admin/ProductIndex
+        public async Task<IActionResult> ProductIndex()
+        {
+            var products = await productService.GetAllWithDetailsAsync();
+            return View(products);
+        }
 
-    //    // GET: Admin/CreateProduct
-    //    public IActionResult CreateProduct()
-    //    {
-    //        ViewData["AddedByUserId"] = new SelectList(_context.Users, "Id", "Id");
-    //        ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Description");
-    //        return View();
-    //    }
+        // GET: Admin/ProductDetails/5
+        public async Task<IActionResult> ProductDetails(int Id)
+        {
+            var product = await productService.GetByIdWithDetailsAsync(Id);
 
-    //    // POST: Admin/CreateProduct
-    //    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    //    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    //    [HttpPost]
-    //    [ValidateAntiForgeryToken]
-    //    public async Task<IActionResult> CreateProduct([Bind("Id,Name,Description,Price,Stock,ImageUrl,CategoryId,AddedByUserId")] Product product)
-    //    {
-    //        if (ModelState.IsValid)
-    //        {
-    //            _context.Add(product);
-    //            await _context.SaveChangesAsync();
-    //            return RedirectToAction(nameof(Index));
-    //        }
-    //        ViewData["AddedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.AddedByUserId);
-    //        ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Description", product.CategoryId);
-    //        return View(product);
-    //    }
+            return View(product);
+        }
 
-    //    // GET: Admin/EditProduct/5
-    //    public async Task<IActionResult> EditProduct(int? id)
-    //    {
-    //        if (id == null)
-    //        {
-    //            return NotFound();
-    //        }
+        // GET: Admin/CreateProduct
+        public async Task<IActionResult> CreateProduct()
+        {
+            var categories = await categoryService.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(categories, "Id", "Name");
+            return View();
+        }
 
-    //        var product = await _context.Products.FindAsync(id);
-    //        if (product == null)
-    //        {
-    //            return NotFound();
-    //        }
-    //        ViewData["AddedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.AddedByUserId);
-    //        ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Description", product.CategoryId);
-    //        return View(product);
-    //    }
+        // POST: Admin/CreateProduct
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateProduct(ProductAddUpdateViewModel productmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                productmodel.ImageUrl = await imageService.UploadAsync(productmodel.ImageFile,"images")??"images/Icon.png";
+                productmodel.AddedByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)??"";
+                //productmodel.AddedByUserId = userManager.GetUserId(User);
 
-    //    // POST: Admin/EditProduct/5
-    //    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    //    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    //    [HttpPost]
-    //    [ValidateAntiForgeryToken]
-    //    public async Task<IActionResult> EditProduct(int id, [Bind("Id,Name,Description,Price,Stock,ImageUrl,CategoryId,AddedByUserId")] Product product)
-    //    {
-    //        if (id != product.Id)
-    //        {
-    //            return NotFound();
-    //        }
+                var productdto = productmodel.ToAddProductDto();
+                await productService.AddAsync(productdto);
+ 
+                return RedirectToAction(nameof(ProductIndex));
+            }
+            var categories = await categoryService.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(categories, "Id", "Name");
+            return View(productmodel);
+        }
 
-    //        if (ModelState.IsValid)
-    //        {
-    //            try
-    //            {
-    //                _context.Update(product);
-    //                await _context.SaveChangesAsync();
-    //            }
-    //            catch (DbUpdateConcurrencyException)
-    //            {
-    //                if (!ProductExists(product.Id))
-    //                {
-    //                    return NotFound();
-    //                }
-    //                else
-    //                {
-    //                    throw;
-    //                }
-    //            }
-    //            return RedirectToAction(nameof(Index));
-    //        }
-    //        ViewData["AddedByUserId"] = new SelectList(_context.Users, "Id", "Id", product.AddedByUserId);
-    //        ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Description", product.CategoryId);
-    //        return View(product);
-    //    }
+        // GET: Admin/EditProduct/5
+        public async Task<IActionResult> EditProduct(int Id)
+        {
 
-    //    // GET: Admin/DeleteProduct/5
-    //    public async Task<IActionResult> DeleteProduct(int? id)
-    //    {
-    //        if (id == null)
-    //        {
-    //            return NotFound();
-    //        }
+            var productdto = await productService.GetByIdWithDetailsAsync(Id);
+            var model = productdto.ToProductAddUpdateViewModel();
 
-    //        var product = await _context.Products
-    //            .Include(p => p.AddedByUser)
-    //            .Include(p => p.Category)
-    //            .FirstOrDefaultAsync(m => m.Id == id);
-    //        if (product == null)
-    //        {
-    //            return NotFound();
-    //        }
+            var categories = await categoryService.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(categories, "Id", "Name",productdto.CategoryId);
 
-    //        return View(product);
-    //    }
+            return View(model);
+        }
 
-    //    // POST: Admin/DeleteProduct/5
-    //    [HttpPost, ActionName("DeleteProduct")]
-    //    [ValidateAntiForgeryToken]
-    //    public async Task<IActionResult> DeleteConfirmed(int id)
-    //    {
-    //        var product = await _context.Products.FindAsync(id);
-    //        if (product != null)
-    //        {
-    //            _context.Products.Remove(product);
-    //        }
+        // POST: Admin/EditProduct/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProduct(ProductAddUpdateViewModel productmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (productmodel.ImageFile != null) {
+                    imageService.Delete(productmodel.ImageUrl);
+                    productmodel.ImageUrl = await imageService.UploadAsync(productmodel.ImageFile, "images");
+                }
 
-    //        await _context.SaveChangesAsync();
-    //        return RedirectToAction(nameof(Index));
-    //    }
+                var productdto=productmodel.ToUpdateProductDto();
+                await productService.UpdateAsync(productdto);
+                return RedirectToAction(nameof(ProductIndex));
+            }
 
-    //    private bool ProductExists(int id)
-    //    {
-    //        return _context.Products.Any(e => e.Id == id);
-    //    }
-    //}
+            var categories = await categoryService.GetAllAsync();
+            ViewData["CategoryId"] = new SelectList(categories, "Id", "Name", productmodel.CategoryId);
+            return View(productmodel);
+        }
+
+        // GET: Admin/DeleteProduct/5
+        public async Task<IActionResult> DeleteProduct(int Id)
+        {
+            var product = await productService.GetByIdWithDetailsAsync(Id);
+            return View(product);
+        }
+
+        // POST: Admin/DeleteProduct/5
+        [HttpPost, ActionName("DeleteProduct")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int Id,string ImageUrl)
+        {
+            imageService.Delete(ImageUrl);
+            await productService.DeleteByIdAsync(Id);
+            return RedirectToAction(nameof(ProductIndex));
+        }
+
+    }
 }

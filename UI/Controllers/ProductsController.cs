@@ -1,4 +1,4 @@
-﻿using BLL.DTOs.Product;
+﻿using BLL.DTOs.Products;
 using BLL.Interfaces;
 using BLL.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +11,12 @@ namespace UI.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService ProductService;
+        private readonly ICategoryService CategoryService;
 
-        public ProductsController(IProductService _ProductService)
+        public ProductsController(IProductService _ProductService, ICategoryService _categoryService)
         {
             ProductService = _ProductService;
+            CategoryService = _categoryService;
         }
 
         [HttpGet]
@@ -29,9 +31,8 @@ namespace UI.Controllers
             model.MaxPrice = MaxPrice;
             model.MinPrice=MinPrice;
             model.MaxProduct = MaxPrice;
-
             model.MinProduct = MinPrice;
-
+            model.CategoryNames= await CategoryService.GetNamesAsync();
             return  View(model);
         }
 
@@ -45,19 +46,20 @@ namespace UI.Controllers
 
             filtersModel.Products = products;
             filtersModel.TotalProducts = totalProducts;
-            filtersModel.MaxPrice = MaxPrice;
             filtersModel.MaxProduct = MaxPrice;
-            filtersModel.MinPrice = MinPrice;
             filtersModel.MinProduct = MinPrice;
-
+            //filtersModel.MaxPrice = MaxPrice;
+            //filtersModel.MinPrice = MinPrice;
+            filtersModel.CategoryNames = await CategoryService.GetNamesAsync();
             return View(filtersModel);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details() { 
-        
+        public async Task<IActionResult> Details(int Id) {
 
-            return View();
+            var product = await ProductService.GetByIdWithDetailsAsync(Id);
+            var model = product.ToProductDetailsViewModel();
+            return View(model);
         }
 
     }

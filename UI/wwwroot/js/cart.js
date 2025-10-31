@@ -9,10 +9,15 @@ function removeFromCart(productId) {
     const formData = new FormData();
     formData.append('productId', productId);
     
-    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-    if (token) {
-        formData.append('__RequestVerificationToken', token);
-    }
+    //const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+    //if (token) {
+    //    formData.append('__RequestVerificationToken', token);
+    //}
+
+    const token = document.querySelector('meta[name="x-xsrf-token"]')?.getAttribute('content');
+    if (token) formData.append('__RequestVerificationToken', token);
+
+
     
     fetch('/Cart/RemoveFromCart', {
         method: 'POST',
@@ -37,19 +42,23 @@ function removeFromCart(productId) {
 // Update Cart Quantity
 function updateCartQuantity(productId, quantity) {
     if (quantity < 1) quantity = 1;
-    if (quantity > 10) {
-        quantity = 10;
-        showToast('Maximum quantity per item is 10', 'warning');
+    if (quantity > 100) {
+        quantity = 100;
+        showToast('Maximum quantity per item is 100', 'warning');
     }
     
     const formData = new FormData();
     formData.append('productId', productId);
     formData.append('quantity', quantity);
     
-    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-    if (token) {
-        formData.append('__RequestVerificationToken', token);
-    }
+    const token = document.querySelector('meta[name="x-xsrf-token"]')?.getAttribute('content');
+    if (token) formData.append('__RequestVerificationToken', token);
+
+
+    //const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+    //if (token) {
+    //    formData.append('__RequestVerificationToken', token);
+    //}
     
     fetch('/Cart/UpdateCart', {
         method: 'POST',
@@ -73,42 +82,46 @@ function updateCartQuantity(productId, quantity) {
 
 // Show Toast Messages
 function showToast(message, type = 'info') {
-    const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-bg-${type === 'error' ? 'danger' : type} border-0`;
-    toast.setAttribute('role', 'alert');
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">
-                <i class="fas fa-${getToastIcon(type)} me-2"></i>${message}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
+
+    cartManager.showToast(message, type)
+    //const toast = document.createElement('div');
+    //toast.className = `toast align-items-center text-bg-${type === 'error' ? 'danger' : type} border-0`;
+    //toast.setAttribute('role', 'alert');
+    //toast.innerHTML = `
+    //    <div class="d-flex">
+    //        <div class="toast-body">
+    //            <i class="fas fa-${getToastIcon(type)} me-2"></i>${message}
+    //        </div>
+    //        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    //    </div>
+    //`;
     
-    const toastContainer = document.querySelector('.toast-container') || createToastContainer();
-    toastContainer.appendChild(toast);
+    //const toastContainer = document.querySelector('.toast-container') || createToastContainer();
+    //toastContainer.appendChild(toast);
     
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
+    //const bsToast = new bootstrap.Toast(toast);
+    //bsToast.show();
     
-    toast.addEventListener('hidden.bs.toast', () => {
-        toast.remove();
-    });
+    //toast.addEventListener('hidden.bs.toast', () => {
+    //    toast.remove();
+    //});
 }
 
 function createToastContainer() {
-    const container = document.createElement('div');
-    container.className = 'toast-container position-fixed top-0 end-0 p-3';
-    document.body.appendChild(container);
-    return container;
+    cartManager.createToastContainer();
+    //const container = document.createElement('div');
+    //container.className = 'toast-container position-fixed top-0 end-0 p-3';
+    //document.body.appendChild(container);
+    //return container;
 }
 
 function getToastIcon(type) {
-    const icons = {
-        success: 'check-circle',
-        error: 'exclamation-circle',
-        warning: 'exclamation-triangle',
-        info: 'info-circle'
-    };
-    return icons[type] || 'info-circle';
+    cartManager.getToastIcon(type);
+    //const icons = {
+    //    success: 'check-circle',
+    //    error: 'exclamation-circle',
+    //    warning: 'exclamation-triangle',
+    //    info: 'info-circle'
+    //};
+    //return icons[type] || 'info-circle';
 }

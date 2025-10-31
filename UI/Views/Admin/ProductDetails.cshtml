@@ -1,4 +1,5 @@
-﻿@model DAL.Entities.Product
+﻿@using BLL.DTOs.Products
+@model GetProductWithDetailsDto
 
 @{
     ViewData["Title"] = "Details";
@@ -35,26 +36,26 @@
             @Html.DisplayFor(model => model.Stock)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
+           Image
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
+            <img src="~/@Model.ImageUrl" style="width:200px" />
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AddedByUser)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AddedByUser.Id)
+            @Html.DisplayFor(model => model.AddedByUser)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Description)
+            @Html.DisplayFor(model => model.Category)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="EditProduct" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="ProductIndex">Back to List</a>
 </div>

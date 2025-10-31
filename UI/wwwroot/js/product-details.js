@@ -12,7 +12,7 @@ function setupProductDetailsEvents() {
     if (quantityInput) {
         quantityInput.addEventListener('change', function() {
             if (this.value < 1) this.value = 1;
-            if (this.value > 10) this.value = 10;
+            if (this.value > 100) this.value = 100;
         });
     }
 }
@@ -27,7 +27,7 @@ function decreaseQuantity() {
 
 function increaseQuantity() {
     const quantityInput = document.getElementById('quantity');
-    if (quantityInput.value < 10) {
+    if (quantityInput.value < 100) {
         quantityInput.value = parseInt(quantityInput.value) + 1;
     }
 }

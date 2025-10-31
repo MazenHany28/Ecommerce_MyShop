@@ -19,14 +19,14 @@
                         </div>
                         <div class="card-body">
                             <!-- Quick Filters -->
-                            <div class="filter-chips mb-4">
+@*                             <div class="filter-chips mb-4">
                                 <div class="filter-chip @(string.IsNullOrEmpty(Model.Category) || Model.Category == "all" ? "active" : "")" data-category="all">All Products</div>
                                 <div class="filter-chip @(Model.Category == "electronics" ? "active" : "")" data-category="electronics">Electronics</div>
                                 <div class="filter-chip @(Model.Category == "clothing" ? "active" : "")" data-category="clothing">Clothing</div>
                                 <div class="filter-chip @(Model.Category == "home" ? "active" : "")" data-category="home">Home & Kitchen</div>
                                 <div class="filter-chip @(Model.Category == "books" ? "active" : "")" data-category="books">Books</div>
                             </div>
-                            
+                             *@
                             <!-- Category Filter -->
                             <div class="mb-4">
                                 <h6>Category</h6>
@@ -34,22 +34,16 @@
                                     <input class="form-check-input category-filter" type="radio" name="category" id="all-categories" value="all" @(string.IsNullOrEmpty(Model.Category) || Model.Category == "all" ? "checked" : "")>
                                     <label class="form-check-label" for="all-categories">All Categories</label>
                                 </div>
+                            @foreach (var category in Model.CategoryNames)
+                            {
                                 <div class="form-check">
-                                    <input class="form-check-input category-filter" type="radio" name="category" id="electronics" value="electronics" @(Model.Category == "electronics" ? "checked" : "")>
-                                    <label class="form-check-label" for="electronics">Electronics</label>
+                                    <input class="form-check-input category-filter" type="radio" name="category" id="@category" value="@category" @(Model.Category == $"{category}" ? "checked" : "")>
+                                    <label class="form-check-label" for="@category">@category</label>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input category-filter" type="radio" name="category" id="clothing" value="clothing" @(Model.Category == "clothing" ? "checked" : "")>
-                                    <label class="form-check-label" for="clothing">Clothing</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input category-filter" type="radio" name="category" id="home" value="home" @(Model.Category == "home" ? "checked" : "")>
-                                    <label class="form-check-label" for="home">Home & Kitchen</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input category-filter" type="radio" name="category" id="books" value="books" @(Model.Category == "books" ? "checked" : "")>
-                                    <label class="form-check-label" for="books">Books</label>
-                                </div>
+
+                            }
+                           
+                       
                             </div>
                             
                             <!-- Price Filter -->
@@ -78,8 +72,8 @@
                                 </select>
                             </div>
                             
-                            <button class="btn btn-primary w-100" id="apply-filters">Apply Filters</button>
-                            <button class="btn btn-outline-secondary w-100 mt-2" id="reset-filters">Reset Filters</button>
+                           
+                        <button class="btn btn-primary w-100 mt-2" id="reset-filters">Reset Filters</button>
                         </div>
                     </div>
                 </div>
@@ -88,8 +82,10 @@
                 <div class="col-lg-9">
                     <div class="d-flex justify-content-center align-items-center mb-4">
                     <h2>Products</h2>
-                        <div class="d-flex align-items-center">
-        @*                     <span class="me-2">View:</span>
+                    
+@*                         <div class="d-flex align-items-center">
+                        
+                            <span class="me-2">View:</span>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-outline-primary active" id="grid-view">
                                     <i class="fas fa-th"></i>
@@ -97,9 +93,13 @@
                                 <button type="button" class="btn btn-outline-primary" id="list-view">
                                     <i class="fas fa-list"></i>
                                 </button>
-                            </div> *@
-                        </div>
+                            </div>
+                        </div> *@
                     </div>
+
+                <div class="text-center">
+                    <input id="search-input" class="form-control me-4" type="search" name="SearchTerm" placeholder="Search products..." aria-label="Search">
+                </div>
                     
                     <!-- Results Count -->
                     <div id="results-count" class="text-muted mb-3 text-center">
@@ -116,7 +116,7 @@
                         {
                             <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
                                 <div class="card product-card h-100">
-                             <img src="~/@product.ImageUrl" class=" product-image" alt="@product.Name">
+                                <img src="~/@product.ImageUrl" class="card-img-top" alt="@product.Name">
                                     <div class="card-body d-flex flex-column">
                                         <h5 class="card-title">@product.Name</h5>
                                         <p class="card-text flex-grow-1">@product.Description</p>
@@ -135,7 +135,7 @@
                                     <button class="btn btn-add-to-cart " disabled="@(product.Stock <= 0)" onclick="addToCart(@product.Id)">
                                             <i class="fas fa-cart-plus me-2"></i>Add to Cart
                                         </button>
-                                        <a href="@Url.Action("Details", "Products", new { id = @product.Id })" class="btn btn-outline-primary mt-2">
+                                        <a href="@Url.Action("Details", "Products", new { Id = @product.Id })" class="btn btn-outline-primary mt-2">
                                             View Details
                                         </a>
                                     </div>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.DTOs.Product
+namespace BLL.DTOs.Products
 {
     public class ProductFiltersDto
     {

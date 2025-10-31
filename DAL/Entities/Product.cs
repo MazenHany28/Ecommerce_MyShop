@@ -20,7 +20,7 @@ namespace DAL.Entities
         [Range(0, int.MaxValue, ErrorMessage = "Can't be negative")]
         public int Stock {  get; set; }
         [RegularExpression(@"^.*\.(png|jpg)$", ErrorMessage = "Invalid Image Format")]
-        public string ImageUrl { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = "images/Icon.png";
         //fk
         [Required]
         public int CategoryId { get; set; }
