@@ -6,6 +6,7 @@ using DAL.Repositories;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using UI.Helpers;
 
 
@@ -21,10 +22,17 @@ namespace UI
             var connectionString = builder.Configuration.GetConnectionString("EcommerceDB") ?? throw new InvalidOperationException("Connection string 'EcommerceDB' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
-   
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddIdentity<AppIdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddIdentity<AppIdentityUser, IdentityRole>(options => {
+
+                options.SignIn.RequireConfirmedAccount = false;
+                options.User.RequireUniqueEmail = true;
+
+            } )
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
@@ -40,13 +48,18 @@ namespace UI
             builder.Services.AddScoped<IproductRepo, ProductRepo>();
             builder.Services.AddScoped<IOrderRepo, OrderRepo>();
             builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
+            builder.Services.AddScoped<IOrderProductsRepo, OrderProductsRepo>();
+
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductService, BLL.Services.ProductService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IImageService, ImageService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IPaymentService, StripePaymentService>();
+
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
@@ -64,7 +77,9 @@ namespace UI
             }
             else
             {
-                app.UseExceptionHandler("~Views/Shared/Error");
+                app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Home/StatusCode", "?code={0}");
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

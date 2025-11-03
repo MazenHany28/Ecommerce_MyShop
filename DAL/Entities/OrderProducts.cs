@@ -19,6 +19,7 @@ namespace DAL.Entities
         public int? ProductId { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "Can't be negative")]
         public int Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
         //nav prop
         public virtual Product? product { get; set; }
         public virtual Order? order { get; set; }

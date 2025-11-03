@@ -13,6 +13,8 @@ namespace DAL.UnitOfWork
         public IproductRepo Products{ get; }
         public IOrderRepo Orders { get; }
         public ICategoryRepo Categories { get; }
+        public IOrderProductsRepo Orderproducts { get; }
+
 
         Task SaveChangesAsync();
     }
