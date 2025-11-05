@@ -1,0 +1,141 @@
+﻿@page "{Id:int}"
+@model OrderDetailsModel
+@{
+    ViewData["Title"] = "Your Orders";
+    ViewData["ActivePage"] = ManageNavPages.Orders;
+}
+@{
+    // Ensure 'subtotal' variable is defined at the top of the Razor Page/View if necessary
+    decimal subtotal = 0;
+}
+
+<div class="container py-5">
+
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold text-info"><i class="bi bi-receipt me-2"></i> Order Details</h1>
+            <p class="lead text-muted">Transaction ID: **@Model.Order.Id**</p>
+            <hr class="w-25 mx-auto" />
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 col-md-12">
+            <div class="card shadow-lg border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0"><i class="bi bi-info-circle me-2"></i> Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row g-3">
+
+                        <dt class="col-sm-3 fw-bold text-dark">
+                            @Html.DisplayNameFor(model => model.Order.CustomerName)
+                        </dt>
+                        <dd class="col-sm-9 fs-5 text-break">
+                            @Html.DisplayFor(model => model.Order.CustomerName)
+                        </dd>
+
+                        <dt class="col-sm-3 fw-bold text-dark">
+                            @Html.DisplayNameFor(model => model.Order.OrderDate)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-secondary fs-6 rounded-pill">
+                                <i class="bi bi-clock me-1"></i> @Model.Order.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")
+                            </span>
+                        </dd>
+
+                        <div class="col-12"><hr class="my-2" /></div>
+
+                        <dt class="col-sm-3 fw-bold text-dark">
+                            @Html.DisplayNameFor(model => model.Order.Total)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-success fs-5 p-2">
+                                <i class="bi bi-currency-dollar"></i> @Html.DisplayFor(model => model.Order.Total)
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3 fw-bold text-dark">
+                            @Html.DisplayNameFor(model => model.Order.PaymentProvider)
+                        </dt>
+                        <dd class="col-sm-9 text-break">
+                            @Html.DisplayFor(model => model.Order.PaymentProvider)
+                        </dd>
+
+                        <dt class="col-sm-3 fw-bold text-dark">
+                            @Html.DisplayNameFor(model => model.Order.PaymentTransactionId)
+                        </dt>
+                        <dd class="col-sm-9 small text-break">
+                            <code class="bg-light p-1 rounded">@Html.DisplayFor(model => model.Order.PaymentTransactionId)</code>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <h3 class="mb-3 fw-bold"><i class="bi bi-box-seam me-2"></i> Items in Order</h3>
+
+            <div class="table-responsive shadow-lg rounded">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width:100px;">Image</th>
+                            <th scope="col" class="text-start">Product Name</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Line Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Order.OrderItems)
+                        {
+                            subtotal += item.UnitPrice * item.Quantity;
+                            <tr>
+                                <td>
+                                    <img src="~/@item.ProductImageURL" class="img-fluid rounded" style="max-width:50px; height:auto;" alt="Product Image" />
+                                </td>
+                                <td class="text-start fw-bold">
+                                    @Html.DisplayFor(modelItem => item.ProductName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">@Html.DisplayFor(modelItem => item.Quantity)</span>
+                                </td>
+                                <td class="fw-bold text-success">
+                                    @("$"+(item.UnitPrice * item.Quantity).ToString("F2")) @* Assuming currency format *@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                    <tfoot>
+                        @if (Model.Order.Total != subtotal)
+                        {
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">Subtotal:</td>
+                                <td class="fw-bold">$@subtotal.ToString("F2")</td> @* Assuming currency format *@
+                            </tr>
+                        }
+
+                        <tr class="table-success">
+                            <td colspan="4" class="text-end fw-bolder fs-5">GRAND TOTAL:</td>
+                            <td class="fw-bolder fs-5">$@Model.Order.Total.ToString("F2")</td> @* Assuming currency format *@
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 pt-4 border-top text-center">
+        <a asp-page="./Orders" class="btn btn-secondary btn-lg shadow-sm me-3">
+            <i class="bi bi-arrow-left"></i> Back to Orders List
+        </a>
+    </div>
+
+</div>

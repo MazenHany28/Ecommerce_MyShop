@@ -3,6 +3,7 @@ using BLL.DTOs.Products;
 using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace BLL.Services
 
         public async Task<IEnumerable<GetCategoryDto>> GetAllAsync()
         {
-            var categories = await UoW.Categories.GetAllAsync();
+            var categories = await UoW.Categories.GetAllAsync(c=>c.Include(c=>c.products));
             return categories.Select(c => c.ToGetCategoryDto());
         }
 
@@ -55,7 +56,7 @@ namespace BLL.Services
 
         public async Task<GetCategoryDto?> GetByIdAsync(int Id)
         {
-            var category = await UoW.Categories.GetByIdAsync(Id);
+            var category = await UoW.Categories.GetByIdWithDetailsAsync(Id);
             if (category != null)
                 return category.ToGetCategoryDto();
             else

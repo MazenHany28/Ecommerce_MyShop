@@ -69,6 +69,19 @@ namespace BLL.Services
 
         }
 
+        public async Task<IEnumerable<GetProductWithDetailsDto>> GetAllByUserIdAsync(string Id)
+        {
+
+            var products = await UoW.Products.GetAllAsync(
+                                                             p => p
+                                                             .Include(p => p.AddedByUser)
+                                                             .Include(p => p.Category)
+                                                             .Where(p => p.AddedByUserId==Id)
+                                                             );
+            return products.Select(p => p.ToGetProductWithDetailsDto());
+
+        }
+
         public async Task<GetProductDto?> GetByIdAsync(int Id)
         {
 
@@ -88,7 +101,6 @@ namespace BLL.Services
                 else
                     throw new NotFoundException($"No product with this Id is found");
         }
-
 
         public async Task UpdateAsync(UpdateProductDto productDto)
         {

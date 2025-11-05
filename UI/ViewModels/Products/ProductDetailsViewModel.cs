@@ -9,6 +9,7 @@
         public string ImageUrl { get; set; } = string.Empty;
         public string Category { get; set; }
         public string CategoryDescription { get; set; }
+        public int Stock {  get; set; }
         //public int QuantitySold { get; set; }
     }
 }

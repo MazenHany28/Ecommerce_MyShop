@@ -11,10 +11,18 @@ namespace BLL.Services
 {
     public class CartService : ICartService
     {
-        private const int MaxPerItem = 100;
+      
+        private readonly IProductService _productService;
 
-        public void AddItem(List<CartItem> cart, GetProductDto product, int qty = 1)
+        public CartService(IProductService productService)
         {
+            _productService= productService;
+        }
+
+        public async Task AddItem(List<CartItem> cart, GetProductDto product, int qty = 1)
+        {
+            var p = await _productService.GetByIdAsync(product.Id);
+            int MaxPerItem = p.Stock;
             var existing = cart.FirstOrDefault(x => x.ProductId == product.Id);
             if (existing != null)
             {
@@ -39,8 +47,10 @@ namespace BLL.Services
             cart.RemoveAll(x => x.ProductId == productId);
         }
 
-        public bool UpdateQuantity(List<CartItem> cart, int productId, int quantity)
+        public async  Task<bool> UpdateQuantity(List<CartItem> cart, int productId, int quantity)
         {
+            var p = await _productService.GetByIdAsync(productId);
+            int MaxPerItem = p.Stock;
             var item = cart.FirstOrDefault(x => x.ProductId == productId);
             if (item == null) return false;
             item.Quantity = Math.Min(MaxPerItem, Math.Max(1, quantity));

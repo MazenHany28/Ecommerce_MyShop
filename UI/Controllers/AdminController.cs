@@ -1,4 +1,5 @@
-﻿using BLL.Interfaces;
+﻿using BLL.DTOs.Categories;
+using BLL.Interfaces;
 using DAL.Data;
 using DAL.Entities;
 using DAL.UnitOfWork;
@@ -22,32 +23,39 @@ namespace UI.Controllers
     {
         private readonly ICategoryService categoryService;
         private readonly IProductService productService;
+        private readonly IOrderService orderService;
         private readonly IImageService imageService;
-        //private readonly UserManager<AppIdentityUser> userManager;
+
 
         public AdminController(IProductService _productservice,
                                 ICategoryService _categoryService,
+                                IOrderService _orderService,
                                 IImageService _imageservice
-                                //UserManager<AppIdentityUser> _userManager
+            
                                 )
         {
            productService = _productservice;
            categoryService = _categoryService;
+            orderService = _orderService;
             imageService = _imageservice;
-            //userManager = _userManager;
+     
         }
 
         public IActionResult Index() { 
             return View();
         }
 
-
-
         // GET: Admin/ProductIndex
         public async Task<IActionResult> ProductIndex()
         {
             var products = await productService.GetAllWithDetailsAsync();
             return View(products);
+        }
+
+        public async Task<IActionResult> CategoryIndex()
+        {
+            var categories = await categoryService.GetAllAsync();
+            return View(categories);
         }
 
         // GET: Admin/ProductDetails/5
@@ -67,8 +75,6 @@ namespace UI.Controllers
         }
 
         // POST: Admin/CreateProduct
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProduct(ProductAddUpdateViewModel productmodel)
@@ -89,6 +95,23 @@ namespace UI.Controllers
             return View(productmodel);
         }
 
+        public IActionResult CreateCategory()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategory(AddCategoryDto categoryDto)
+        {
+            if (ModelState.IsValid)
+            {
+                await categoryService.AddAsync(categoryDto);
+
+                return RedirectToAction(nameof(CategoryIndex));
+            }
+            return View(categoryDto);
+        }
+
         // GET: Admin/EditProduct/5
         public async Task<IActionResult> EditProduct(int Id)
         {
@@ -103,8 +126,6 @@ namespace UI.Controllers
         }
 
         // POST: Admin/EditProduct/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(ProductAddUpdateViewModel productmodel)
@@ -126,6 +147,33 @@ namespace UI.Controllers
             return View(productmodel);
         }
 
+        public async Task<IActionResult> EditCategory(int Id)
+        {
+
+            var GetCategorydto = await categoryService.GetByIdAsync(Id);
+            var UpdateCategoryDto = new UpdateCategoryDto() { 
+            
+            Id=GetCategorydto.Id,
+            Description=GetCategorydto.Description,
+            Name=GetCategorydto.Name
+            
+            };
+
+            return View(UpdateCategoryDto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCategory(UpdateCategoryDto categoryDto)
+        {
+            if (ModelState.IsValid)
+            {
+                await categoryService.UpdateAsync(categoryDto);
+                return RedirectToAction(nameof(CategoryIndex));
+            }
+            return View(categoryDto);
+        }
+
         // GET: Admin/DeleteProduct/5
         public async Task<IActionResult> DeleteProduct(int Id)
         {
@@ -142,6 +190,48 @@ namespace UI.Controllers
             await productService.DeleteByIdAsync(Id);
             return RedirectToAction(nameof(ProductIndex));
         }
+
+        public async Task<IActionResult> DeleteCategory(int Id)
+        {
+            var category = await categoryService.GetByIdAsync(Id);
+            return View(category);
+        }
+
+        [HttpPost, ActionName("DeleteCategory")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCategoryConfirmed(int Id)
+        {
+            await categoryService.DeleteByIdAsync(Id);
+            return RedirectToAction(nameof(CategoryIndex));
+        }
+
+        public async Task<IActionResult> OrderIndex() {
+
+            var orders = await orderService.GetAllAsync();
+            return View(orders);
+        }
+
+        public async Task<IActionResult> OrderDetails(int Id) {
+
+            var order = await orderService.GetByIdAsync(Id);
+            return View(order);
+        }
+
+        public async Task<IActionResult> DeleteOrder(int Id)
+        {
+            var Order = await orderService.GetByIdAsync(Id);
+            return View(Order);
+        }
+
+        [HttpPost, ActionName("DeleteOrder")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteOrderConfirmed(int Id)
+        {
+            await orderService.DeleteByIdAsync(Id);
+            return RedirectToAction(nameof(OrderIndex));
+        }
+
+
 
     }
 }

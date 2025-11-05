@@ -13,6 +13,6 @@ namespace DAL.Entities
         public string Address { get; set; } = string.Empty;
 
         //nav prop
-        public virtual ICollection<Order> Orders { get; set; }= new HashSet<Order>();
+        //public virtual ICollection<Order> Orders { get; set; }= new HashSet<Order>();
     }
 }

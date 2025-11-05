@@ -27,7 +27,7 @@ namespace UI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles ="Customer")]
+        [Authorize]
         public async Task<IActionResult> Checkout()
         {
             var cart = HttpContext.Session.GetObject<List<CartItem>>(CartSessionKey) ?? new List<CartItem>();
@@ -41,7 +41,7 @@ namespace UI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Customer")]
+        [Authorize]
         public async Task<IActionResult> Success(string session_id)
         {
             var cart = HttpContext.Session.GetObject<List<CartItem>>(CartSessionKey) ?? new List<CartItem>();

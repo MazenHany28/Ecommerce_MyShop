@@ -22,5 +22,7 @@ namespace DAL.Entities
 
         //nav prop
         public virtual ICollection<Product> products {  get; set; } =new HashSet<Product>();
+        //nav prop
+        public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }

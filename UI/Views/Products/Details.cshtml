@@ -37,14 +37,15 @@
                                 <label for="quantity" class="form-label me-2">Quantity:</label>
                                 <div class="input-group" style="width: 140px;">
                                     <button class="btn btn-outline-secondary quantity-btn" type="button" onclick="decreaseQuantity()">-</button>
-                                    <input type="number" class="form-control text-center quantity-input" id="quantity" value="1" min="1" max="100">
+                                    <input type="number" class="form-control text-center quantity-input" id="quantity" value="1" min="1" max="10000000">
                                     <button class="btn btn-outline-secondary quantity-btn" type="button" onclick="increaseQuantity()">+</button>
                                 </div>
                             </div>
 
-                            <button class="btn btn-add-to-cart flex-grow-1" onclick="addToCartFromDetails(@Model.Id)">
+                            <button class="btn btn-add-to-cart flex-grow-1" disabled="@(Model.Stock <= 0)" onclick="addToCartFromDetails(@Model.Id)">
                                 <i class="fas fa-cart-plus me-2"></i>Add to Cart
                             </button>
+                            <input hidden id="Stock" value=@(Model.Stock) />
                         </div>
                     </div>
 

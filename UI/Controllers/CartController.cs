@@ -57,10 +57,10 @@ namespace UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateCart(int productId, int quantity)
+        public async Task<IActionResult> UpdateCart(int productId, int quantity)
         {
             var cart = HttpContext.Session.GetObject<List<CartItem>>(CartSessionKey) ?? new List<CartItem>();
-            var updated = _cartService.UpdateQuantity(cart, productId, quantity);
+            var updated = await _cartService.UpdateQuantity(cart, productId, quantity);
             if (!updated) return BadRequest(new { success = false, message = "Item not in cart" });
 
             HttpContext.Session.SetObject(CartSessionKey, cart);

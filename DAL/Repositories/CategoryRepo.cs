@@ -1,5 +1,6 @@
 ﻿using DAL.Data;
 using DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace DAL.Repositories
 {
     public interface ICategoryRepo : IRepository<Category>
     {
-
+        Task<Category?> GetByIdWithDetailsAsync(int Id);
 
     }
 
@@ -19,6 +20,12 @@ namespace DAL.Repositories
         public CategoryRepo(ApplicationDbContext _context) : base(_context)
         {
 
+        }
+
+        public async Task<Category?> GetByIdWithDetailsAsync(int Id) { 
+        
+        return await dbSet.Include(c=>c.products).FirstOrDefaultAsync(c=>c.Id==Id);
+        
         }
 
     }

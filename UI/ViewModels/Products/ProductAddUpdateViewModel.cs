@@ -18,7 +18,7 @@ namespace UI.ViewModels.Products
         [Required]
         public int CategoryId { get; set; }
 
-        public string AddedByUserId { get; set; }
+        public string AddedByUserId { get; set; } = string.Empty;
 
         public IFormFile? ImageFile { get; set; }
     }

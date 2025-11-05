@@ -39,10 +39,11 @@ namespace BLL.DTOs.Products
                 ImageUrl = product.ImageUrl,
                 CategoryId = product.CategoryId,
                 AddedByUserId = product.AddedByUserId,
-                AddedByUser=product.AddedByUser.FirstName+' '+ product.AddedByUser.LastName,
+                AddedByUser=product.AddedByUser.UserName,
                 Category=product.Category.Name ,
                 CategoryDescription=product.Category.Description,
                 QuantitySold=product.orders.Sum(o => o.Quantity), 
+                NumberOfOrders=product.orders.Count()
                 };
 
             return dto;

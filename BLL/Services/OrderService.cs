@@ -57,6 +57,7 @@ namespace BLL.Services
 
         public async Task AddAsync(List<CartItem> cart,string CustomerId,string paymentprovider,string paymentId) {
 
+            var products = await UoW.Products.GetAllAsync();
             var orderitems = new List<OrderProducts>();
             foreach (var item in cart) {
                 orderitems.Add(
@@ -66,8 +67,12 @@ namespace BLL.Services
                     Quantity=item.Quantity,
                     UnitPrice=item.Price
                     }
-
+                    
                     );
+
+                var product = products.FirstOrDefault(p=>p.Id==item.ProductId);
+                product.Stock -= item.Quantity;
+
             }
 
 
@@ -85,6 +90,15 @@ namespace BLL.Services
             await UoW.SaveChangesAsync();
 
         
+        }
+
+        public async Task DeleteByIdAsync(int Id) {
+
+            var order = await UoW.Orders.GetByIdAsync(Id);
+            if(order==null)
+                throw new NotFoundException("No Order is found with this Id");
+            UoW.Orders.Delete(order);
+            await UoW.SaveChangesAsync();
         }
 
 

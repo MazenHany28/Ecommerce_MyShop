@@ -5,57 +5,113 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Stock)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Stock)
-        </dd>
-        <dt class = "col-sm-2">
-           Image
-        </dt>
-        <dd class = "col-sm-10">
-            <img src="~/@Model.ImageUrl" style="width:200px" />
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AddedByUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AddedByUser)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="EditProduct" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="ProductIndex">Back to List</a>
+<div class="container py-5">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4 fw-bold text-info">Product Details</h1>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-info text-white">
+                    <h4 class="card-title mb-0">Product Information</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="fs-5">@Html.DisplayFor(model => model.Name)</span>
+                        </dd>
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.Description)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Description)
+                        </dd>
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.Price)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-success fs-6">@Html.DisplayFor(model => model.Price)</span>
+                        </dd>
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.Stock)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Stock)
+                        </dd>
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.QuantitySold)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-danger fs-6">@Html.DisplayFor(model => model.QuantitySold)</span>
+                        </dd>
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.NumberOfOrders)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-warning text-dark fs-6">@Html.DisplayFor(model => model.NumberOfOrders)</span>
+                        </dd>
+
+                        <hr class="my-3" />
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            Image Preview
+                        </dt>
+                        <dd class="col-sm-8">
+                            <img src="~/@Model.ImageUrl" class="img-fluid rounded shadow-sm border p-1" style="max-width:250px; height:auto;" alt="Product Image" />
+                        </dd>
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.AddedByUser)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.AddedByUser)
+                        </dd>
+
+                        <dt class="col-sm-4 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.Category)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-primary">@Html.DisplayFor(model => model.Category)</span>
+                        </dd>
+
+                        @if (!string.IsNullOrEmpty(Model.CategoryDescription))
+                        {
+                            <dt class="col-sm-4 fw-bold text-muted">
+                                @Html.DisplayNameFor(model => model.CategoryDescription)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.CategoryDescription)
+                            </dd>
+                        }
+
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 pt-3 border-top text-center">
+        <a asp-action="EditProduct" asp-route-id="@Model?.Id" class="btn btn-warning me-3 shadow-sm">
+            <i class="bi bi-pencil-square"></i> Edit
+        </a>
+        <a asp-action="ProductIndex" class="btn btn-secondary shadow-sm">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+
 </div>

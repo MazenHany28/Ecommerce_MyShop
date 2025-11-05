@@ -78,7 +78,7 @@ namespace UI.Areas.Identity.Pages.Account.Manage
                 , ErrorMessage = "Invalid phone number format")]
             public string PhoneNumber { get; set; } = string.Empty;
 
-            [Required]
+     
             [Display(Name = "Address")]
             [StringLength(300, MinimumLength = 3)]
             public string Address { get; set; }
@@ -93,7 +93,7 @@ namespace UI.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //var phoneNumber =user.phonenumber;
+
             var firstname = user.FirstName;
             var lastname = user.LastName;
             string address = string.Empty;

@@ -33,7 +33,8 @@ namespace UI.Helpers
                 Price=dto.Price ,
                 ImageUrl=dto.ImageUrl ,
                 Category=dto.Category ,
-                CategoryDescription=dto.CategoryDescription
+                CategoryDescription=dto.CategoryDescription,
+                Stock=dto.Stock 
             };
          
         }

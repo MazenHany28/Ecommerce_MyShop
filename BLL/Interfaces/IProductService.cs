@@ -18,6 +18,7 @@ namespace BLL.Interfaces
         Task<IEnumerable<GetProductDto>> FilterAsync(Func<IQueryable<Product>, IQueryable<Product>> Query);
         Task<IEnumerable<GetProductDto>> GetAllAsync();
         Task<IEnumerable<GetProductWithDetailsDto>> GetAllWithDetailsAsync();
+        Task<IEnumerable<GetProductWithDetailsDto>> GetAllByUserIdAsync(string Id);
         Task<GetProductDto?> GetByIdAsync(int Id);
         Task<GetProductWithDetailsDto?> GetByIdWithDetailsAsync(int Id);
         Task UpdateAsync(UpdateProductDto productDto);

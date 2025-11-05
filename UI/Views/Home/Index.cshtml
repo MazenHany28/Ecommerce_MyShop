@@ -88,7 +88,7 @@
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <span class="product-price">$@product.Price.ToString("F2")</span>
                                 </div>
-                                <button class="btn btn-add-to-cart w-100" onclick="addToCart(@product.Id)">
+                                <button class="btn btn-add-to-cart w-100" disabled="@(product.Stock <= 0)" onclick="addToCart(@product.Id)">
                                     <i class="fas fa-cart-plus me-2"></i>Add to Cart
                                 </button>
                                 <a href="@Url.Action("Details", "Products", new { Id = product.Id })" class="btn btn-outline-primary mt-2">

@@ -44,13 +44,13 @@ namespace BLL.DTOs.Orders
 
             return new GetOrderDto()
             {
-                        Id =order.Id,
-                        OrderDate =order.OrderDate,
-                        Total =order.Total,
-                        PaymentProvider=order.PaymentProvider,
-                        PaymentTransactionId =order.PaymentTransactionId,
-                        CustomerId =order.CustomerId,
-                        CustomerName =order.customer.UserName
+                        Id = order.Id,
+                        OrderDate = order.OrderDate,
+                        Total = order.Total,
+                        PaymentProvider = order.PaymentProvider,
+                        PaymentTransactionId = order.PaymentTransactionId,
+                        CustomerId = order.CustomerId,
+                        CustomerName = order.customer.UserName
             };
 
 

@@ -38,7 +38,7 @@ namespace BLL.Services
                         Name = products.Where(p=>p.Id==item.ProductId).Select(p=>p.Name).First()
                     },
                 },
-                Quantity = item.Quantity,
+                Quantity = Math.Min(item.Quantity,products.Where(p => p.Id == item.ProductId).Select(p => p.Stock).First()),
             }).ToList();
 
 

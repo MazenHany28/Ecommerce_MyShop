@@ -1,0 +1,140 @@
+﻿@using BLL.DTOs.Orders
+@model GetOrderDetailsDto
+
+@{
+    ViewData["Title"] = "Order Details";
+    decimal subtotal = 0;
+}
+
+<div class="container py-5">
+
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold text-info">Order Details</h1>
+            <p class="lead text-muted">Order ID: **@Model.Id**</p>
+            <hr class="w-50 mx-auto" />
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 col-md-12">
+            <div class="card shadow-lg border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0"><i class="bi bi-file-text me-2"></i> Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.CustomerName)
+                        </dt>
+                        <dd class="col-sm-9 fs-5">
+                            @Html.DisplayFor(model => model.CustomerName)
+                        </dd>
+
+                        <dt class="col-sm-3 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.OrderDate)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-secondary fs-6">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                        </dd>
+
+                        <hr class="my-3" />
+
+                        <dt class="col-sm-3 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.Total)
+                        </dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-success fs-5">@Html.DisplayFor(model => model.Total)</span>
+                        </dd>
+
+                        <dt class="col-sm-3 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.PaymentProvider)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.PaymentProvider)
+                        </dd>
+
+                        <dt class="col-sm-3 fw-bold text-muted">
+                            @Html.DisplayNameFor(model => model.PaymentTransactionId)
+                        </dt>
+                        <dd class="col-sm-9 small text-break">
+                            @Html.DisplayFor(model => model.PaymentTransactionId)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <h3 class="mb-3"><i class="bi bi-list-check me-2"></i> Items in Order</h3>
+
+            <div class="table-responsive shadow-sm rounded">
+                <table class="table table-striped table-hover table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width:100px;">Image</th>
+                            <th scope="col" class="text-start">Product Name</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Line Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            subtotal += item.UnitPrice * item.Quantity;
+                            <tr>
+                                <td>
+                                    <img src="~/@item.ProductImageURL" class="img-fluid rounded" style="max-width:50px; height:auto;" alt="Product Image" />
+                                </td>
+                                <td class="text-start fw-bold">
+                                    @Html.DisplayFor(modelItem => item.ProductName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                                <td class="fw-bold">
+                                    @(item.UnitPrice* item.Quantity)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                    <tfoot>
+
+                        @if (Model.Total != subtotal)
+                        {
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">Subtotal:</td>
+                                <td class="fw-bold">@subtotal</td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td colspan="4" class="text-end fw-bold table-success">Grand Total:</td>
+                            <td class="fw-bold table-success">@Model.Total</td>
+                        </tr>
+                    </tfoot>
+                    
+                    
+                   
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 pt-3 border-top text-center">
+        <a asp-action="DeleteOrder" asp-route-id="@Model.Id" class="btn btn-danger me-3 shadow-sm">
+            <i class="bi bi-trash-fill"></i> Delete Order
+        </a>
+        <a asp-action="OrderIndex" class="btn btn-secondary shadow-sm">
+            <i class="bi bi-arrow-left"></i> Back to Orders List
+        </a>
+    </div>
+
+</div>

@@ -24,6 +24,7 @@ namespace DAL.Repositories
 
             return await dbSet.Include("Category")
                  .Include("AddedByUser")
+                 .Include(p=>p.orders)
                  .FirstOrDefaultAsync(p => p.Id == Id);
 
         }

@@ -15,5 +15,6 @@ namespace BLL.Interfaces
         Task<IEnumerable<GetOrderDto>> GetAllByCustomerAsync(string CustomerID);
         Task AddAsync(List<CartItem> cart, string CustomerId, string paymentprovider, string paymentId);
         Task<GetOrderDetailsDto?> GetByPaymentIdAsync(string Id);
+        Task DeleteByIdAsync(int Id);
     }
 }

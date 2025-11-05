@@ -362,3 +362,11 @@ button.accept-policy {
     color: #6c757d;
     margin-top: 0.5rem;
 }
+
+
+.dashboard-item:hover {
+
+    transform:translateY(-10px);
+
+}
+

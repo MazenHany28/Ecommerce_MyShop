@@ -1,0 +1,70 @@
+﻿@page
+@model OrdersModel
+
+@{
+    ViewData["Title"] = "Your Orders";
+    ViewData["ActivePage"] = ManageNavPages.Orders;
+}
+
+
+<div class="container py-4">
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-striped table-hover table-bordered caption-top">
+
+
+            <thead class="table-dark text-white">
+                <tr>
+                    <th scope="col" class="text-start">
+                        @Html.DisplayNameFor(model => model.Orders.First().CustomerName)
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Orders.First().OrderDate)
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Orders.First().Total)
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Orders.First().PaymentProvider)
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Orders.First().PaymentTransactionId)
+                    </th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Orders)
+                {
+                    <tr>
+                        <td class="text-start fw-bold">
+                            @Html.DisplayFor(modelItem => item.CustomerName)
+                        </td>
+                        <td>
+                            @item.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")
+                        </td>
+                        <td>
+                            <span class="badge bg-success fs-6">
+                                @Html.DisplayFor(modelItem => item.Total)
+                            </span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaymentProvider)
+                        </td>
+                        <td class="small text-muted">
+                            @Html.DisplayFor(modelItem => item.PaymentTransactionId)
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a asp-page="./OrderDetails" asp-route-id="@item.Id" class="btn btn-info text-white">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
