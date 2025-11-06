@@ -111,8 +111,6 @@ If you seed dummy product data:
 ## 🧩 Features
 
 ✅ Identity authentication (Admin - Customer - Buyer)
-✅ Buyer can create their products
-✅ Users can edit their profiles and view their order history
 ✅ Product browsing & filtering  
 ✅ Shopping cart system  
 ✅ Stripe online payments  
@@ -163,12 +161,17 @@ Planned future work.
 3. Proceed to checkout
 4. Enter payment details
 5. Receive confirmation
+6. Edit profile and view order history
 
 ### Admin Capabilities
 - Create/update/delete products
 - Manage categories
 - View orders
 - Control inventory
+
+
+### Buyer Capabilities
+- Create/update/delete their own products
 
 ---
 
