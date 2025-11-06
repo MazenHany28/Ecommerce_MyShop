@@ -1,10 +1,10 @@
-**1)clone the repo**
+1)clone the repo
 
-**2)install dependencies**
+2)install dependencies
 
-**3)change appsetting.json to you custom secrets(include connection string and stripe secrets)**
+3)change appsetting.json to you custom secrets(include connection string and stripe secrets)
 
-**4)run**
+4)run
 
 
 initial Admin Account ==> change to your custom username and password
