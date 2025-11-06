@@ -13,6 +13,7 @@ namespace BLL.Interfaces
     public interface IProductService
     {
 
+        Task<int> GetCountAsync();
         Task AddAsync(AddProductDto productDto);
         Task DeleteByIdAsync(int Id);
         Task<IEnumerable<GetProductDto>> FilterAsync(Func<IQueryable<Product>, IQueryable<Product>> Query);

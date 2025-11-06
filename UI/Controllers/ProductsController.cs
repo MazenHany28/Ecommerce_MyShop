@@ -24,6 +24,9 @@ namespace UI.Controllers
         {
             var model = new ProductListViewModel();
             var filters = new ProductFiltersDto();
+            var productsCount = await ProductService.GetCountAsync();
+            if(productsCount<=0)
+                return View(model);
             var (products, totalProducts,MaxPrice,MinPrice) = await ProductService.GetFilteredAsync(filters);
             
             model.Products=products;

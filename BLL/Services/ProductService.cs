@@ -17,10 +17,12 @@ namespace BLL.Services
     public class ProductService:IProductService
     {
         private readonly IUnitOfWork UoW;
+        private readonly IImageService imageService;
         
-        public ProductService(IUnitOfWork _UoW)
+        public ProductService(IUnitOfWork _UoW,IImageService _imageservice)
         {
             UoW = _UoW; 
+            imageService = _imageservice;
         }
 
         public async Task AddAsync(AddProductDto productDto)
@@ -32,11 +34,19 @@ namespace BLL.Services
 
         }
 
+        public async Task<int> GetCountAsync() {
+
+          return   await UoW.Products.GetCountAsync();
+        
+        
+        }
+        
         public async Task DeleteByIdAsync(int Id)
         {
                 var product = await UoW.Products.GetByIdAsync(Id);
                 if (product != null)
                 {
+                    imageService.Delete(product.ImageUrl);
                     UoW.Products.Delete(product);
                     await UoW.SaveChangesAsync();
                 }

@@ -99,12 +99,12 @@ namespace UI
             app.MapRazorPages()
                .WithStaticAssets();
 
-            // Seed roles and admin
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                await RoleSeeder.SeedRolesAndAdminAsync(services);
-            }
+            //Seed roles and admin
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    await RoleSeeder.SeedRolesAndAdminAsync(services);
+            //}
 
 
             app.Run();

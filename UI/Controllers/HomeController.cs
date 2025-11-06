@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Linq;
 using UI.Models;
 
 namespace UI.Controllers
@@ -18,7 +19,11 @@ namespace UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var featuredproductsnum = 8;
+            var productsCount = await productService.GetCountAsync();
+  
+
+           var featuredproductsnum =Math.Min(8, productsCount);
+            
             var featuredproducts = await productService.FilterAsync(p => p.Skip( new Random().Next(p.Count()- featuredproductsnum+1) ).Take(featuredproductsnum));
             return View(featuredproducts);
         }

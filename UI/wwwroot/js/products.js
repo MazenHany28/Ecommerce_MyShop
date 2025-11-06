@@ -4,7 +4,7 @@ let currentView = 'grid';
 let currentPage = 1;
 let searchTimeout = null;
 let isLoading = false;
-
+let filterTimeout = null;
 // Initialize Products Page
 document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
@@ -62,17 +62,29 @@ function setupEventListeners() {
     
     if (minPrice) {
         minPrice.addEventListener('input', function() {
+            clearTimeout(filterTimeout);
             updatePriceValues();
-            currentPage = 1;
-            submitFilterForm();
+
+            filterTimeout = setTimeout(() => {
+                currentPage = 1;
+                submitFilterForm();
+            }, 500);
         });
     }
     
     if (maxPrice) {
         maxPrice.addEventListener('input', function() {
+            clearTimeout(filterTimeout);
             updatePriceValues();
-            currentPage = 1;
-            submitFilterForm();
+
+
+            filterTimeout = setTimeout(() => {
+               
+                currentPage = 1;
+                submitFilterForm();
+            }, 500);
+
+
         });
     }
     

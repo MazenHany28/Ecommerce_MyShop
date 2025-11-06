@@ -1,10 +1,28 @@
-change appsetting.json to you custom secrets
+**1)clone the repo**
+
+**2)install dependencies**
+
+**3)change appsetting.json to you custom secrets(include connection string and stripe secrets)**
+
+**4)run**
 
 
 initial Admin Account ==> change to your custom username and password
+
 adminEmail = admin@admin.com
 UserName = admin
 Password = Admin@123
+
+
+Use test card details to make a payment:
+Card Number: 4242 4242 4242 4242
+Expiration Date: Any future date
+CVC: Any 3 digits
+ZIP Code: Any value
+
+
+if you run the sql dummy insertion, replace the addedbyuserid with the admin userID 
+
 
 features to return to:
 1) email sender and email confirmation
@@ -15,8 +33,7 @@ features to return to:
 6) Stripe Webhooks
 
 
-Use test card details to make a payment:
-Card Number: 4242 4242 4242 4242
-Expiration Date: Any future date
-CVC: Any 3 digits
-ZIP Code: Any value
+
+
+
+

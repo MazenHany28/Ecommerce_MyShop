@@ -31,7 +31,6 @@ namespace UI.Helpers
                     FirstName = "System",
                     LastName = "Admin",
                     Gender = 'M',
-                    //PhoneNumber="01025240697"
                 };
 
                 var result = await userManager.CreateAsync(newAdmin, "Admin@123");

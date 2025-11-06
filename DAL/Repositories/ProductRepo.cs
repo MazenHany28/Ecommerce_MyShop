@@ -12,6 +12,7 @@ namespace DAL.Repositories
     public interface IproductRepo : IRepository<Product> {
       
         Task<Product?> GetByIdWithDetailsAsync(int Id);
+        Task<int> GetCountAsync();
     }
 
     public class ProductRepo : GenericRepository<Product>, IproductRepo
@@ -27,6 +28,12 @@ namespace DAL.Repositories
                  .Include(p=>p.orders)
                  .FirstOrDefaultAsync(p => p.Id == Id);
 
+        }
+
+        public async Task<int> GetCountAsync() { 
+        
+            return await dbSet.CountAsync();
+        
         }
 
 
